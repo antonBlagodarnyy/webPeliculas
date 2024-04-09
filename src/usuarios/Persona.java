@@ -8,6 +8,7 @@ import audiovisual.Audiovisual;
 public abstract class Persona {
 	//TODO Implementar ToString y equals en metodos?
 	//Atributos
+	private int idPersona;//TODO por modificar
 	private String nombre;
 	private String contrasenia;
 	

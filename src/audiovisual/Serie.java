@@ -54,10 +54,10 @@ public class Serie extends Audiovisual {
 			try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
 
 				pstmt.setString(1, getTitulo());
-				pstmt.setString(2, getGenero()); 
+//				pstmt.setString(2, getGenero()); 
 				pstmt.setDouble(3, getMediaValoraciones()); 
-				pstmt.setDate(4,() getFecha()); 
-				pstmt.setTime(5, getDuracion()); 
+//				pstmt.setDate(4, getFecha()); 
+//				pstmt.setTime(5, getDuracion()); 
 				pstmt.setString(6, getDirector().getNombre()+""+getDirector().getApellido());
 				pstmt.setString(7, nombreActores()); 
 				pstmt.setInt(8, getNumeroDeTemporadas()); 

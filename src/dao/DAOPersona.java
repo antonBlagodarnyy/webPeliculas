@@ -1,6 +1,11 @@
 package dao;
 
 
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
@@ -15,9 +20,14 @@ import usuarios.Usuario;
 /**
  * Clase utilizada para obtener informacion de los Usuarios de la base de datos.
  */
-public abstract class DAOPersona {	
-	private static ArrayList<Usuario> usuarioBD= new ArrayList<>();
-	private static ArrayList<Administrador> adminBD= new ArrayList<>(Arrays.asList(new Administrador("Pepito", "1234"),new Administrador("Jaimito","6789")));
+public class DAOPersona {	
+			// Configuración de la conexión a la base de datos Oracle XE
+			static String url = "jdbc:oracle:thin:@localhost:1521:XE"; // URL de conexión
+			static String usuario = "SYSTEM"; // Usuario de la base de datos
+			static String contraseña = "Admin2023"; // Contraseña de la base de datos
+
+//	private static ArrayList<Usuario> usuarioBD= new ArrayList<>();
+//	private static ArrayList<Administrador> adminBD= new ArrayList<>(Arrays.asList(new Administrador("Pepito", "1234"),new Administrador("Jaimito","6789")));
 
 	/**
 	 * Metodo utilizado para obtener un objeto Usuario de la base de datos, a partir de su
@@ -26,15 +36,37 @@ public abstract class DAOPersona {
 	 * @return objeto Usuario, cuyo username coincide con el parametro. En caso de no existir se
 	 * devuelve null. 
 	 */
-	public static Usuario getUsuario(int idUsuario) {
-		Usuario usuarioBuscado=null;
-		for(int i=0;i<usuarioBD.size() && usuarioBuscado==null;i++) {
-			Usuario user=(Usuario) usuarioBD.get(idUsuario);
-			if(user.getIdUsuario()==(idUsuario))
-				usuarioBuscado=user;
+	public static Usuario getPersona(int idPersona) {
+		
+		try (Connection conn = DriverManager.getConnection(url, usuario, contraseña);
+				Statement stmt = conn.createStatement()) {
+			// Declaración de la sentencia SQL
+			String selectSql = "SELECT DNI, NOMBRE, SALARIO FROM Empleados";
+			ResultSet rs = stmt.executeQuery (selectSql);
+
+			//Recorre el ResultSet e imprime los datos
+			while(rs.next()) {
+				int id =rs.getInt("DNI");
+				String nombre= rs.getString("NOMBRE");
+
+				int salario =rs.getInt ("SALARIO");
+
+				System.out.println("ID: " + id + ", Nombre: " + nombre + ", Salario: " + salario);
+			}
+			
+			return usuarioBuscado;
+		} catch (SQLException e) {
+			System.out.println("Seleccion fallida");
 		}
-		return usuarioBuscado;
-	}
+		
+//		Usuario usuarioBuscado=null;
+//		for(int i=0;i<usuarioBD.size() && usuarioBuscado==null;i++) {
+//			Usuario user=(Usuario) usuarioBD.get(idUsuario);
+//			if(user.getIdUsuario()==(idUsuario))
+//				usuarioBuscado=user;
+//		}
+//		return usuarioBuscado;
+//	}
 	/**
 	 * Metodo utilizado para obtener un objeto Administrador de la base de datos, a partir de su
 	 * idAdmin.

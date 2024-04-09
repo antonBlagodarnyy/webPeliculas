@@ -21,5 +21,17 @@ public void setContenidoActuado(ArrayList<Audiovisual> contenidoActuado) {
 }
 
 
-
+//
+//// Declaración de la sentencia SQL para selección
+//String selectSql = "SELECT ID, Nombre, Salario FROM Empleados";
+//
+//// Ejecutar la sentencia SQL para selección
+//try (ResultSet rs = stmt.executeQuery(selectSql)) {
+//    // Recorre el ResultSet e imprime los datos
+//    while (rs.next()) {
+//        int id = rs.getInt("ID");
+//        String nombre = rs.getString("Nombre");
+//        double salario = rs.getDouble("Salario");
+//        System.out.println("ID: " + id + ", Nombre: " + nombre + ", Salario: " + salario);
+//    }
 }
