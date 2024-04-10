@@ -4,19 +4,21 @@ import audiovisual.Audiovisual;
 
 public class Usuario extends Persona{
 	//Att
-	private int idUsuario;//Att unico, no modificable e incremental
+	private int idUsuario;
 	private static int contadorIdUsuario=0;
 	private boolean baneado;
 	
 	//Meth
 		//Const
-	public Usuario(String nombre, String contrasenia) {
+	public Usuario(int idUsuario, String nombre, String contrasenia,boolean baneado) {
 		super(nombre, contrasenia);
-		baneado=false;
-		this.idUsuario=contadorIdUsuario;
-		contadorIdUsuario++;
+		this.baneado=baneado;
+		this.idUsuario=idUsuario;
 	}
-	//Mandar a anton
+	public Usuario() {
+		
+	}
+
 	public void aniadirFavorito(Audiovisual audiovisual) {
 		boolean repetido=false;
 		for (Audiovisual favorito : getFavoritos()) {
