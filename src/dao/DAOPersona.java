@@ -31,7 +31,7 @@ public class DAOPersona {
 	static String contraseña = "Admin2023"; // Contraseña de la base de datos
 
 	public static ArrayList<Usuario> usuarioBD= getListaUsuarios();
-	public static ArrayList<Administrador> adminBD= new ArrayList<>(Arrays.asList(new Administrador("Pepito", "1234"),new Administrador("Jaimito","6789")));
+	public static ArrayList<Administrador> adminBD= new ArrayList<>();
 
 	/**
 	 * Conecta a la bd para obtener la lista de usuarios
