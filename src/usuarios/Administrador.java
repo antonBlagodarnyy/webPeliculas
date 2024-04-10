@@ -16,6 +16,9 @@ public class Administrador extends Persona {
 		this.idAdmin=contadorIdAdmin;
 		contadorIdAdmin++;
 	}
+	public Administrador() {
+		super();
+	}
 		//GetnSet
 	public int getIdAdmin() {
 		return idAdmin;

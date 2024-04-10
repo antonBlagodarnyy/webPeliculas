@@ -8,7 +8,6 @@ import audiovisual.Audiovisual;
 public abstract class Persona {
 	//TODO Implementar ToString y equals en metodos?
 	//Atributos
-	private int idPersona;//TODO por modificar
 	private String nombre;
 	private String contrasenia;
 	
@@ -21,8 +20,10 @@ public abstract class Persona {
 		super();
 		this.nombre = nombre;
 		this.contrasenia = contrasenia;
-		
 	}
+public Persona() {
+	
+}
 	
 	public String getNombre() {
 		return nombre;
