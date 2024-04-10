@@ -3,7 +3,10 @@ package tests;
 import static org.junit.jupiter.api.Assertions.*;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
+
 import org.junit.Test;
 
 import dao.DAOPersona;
@@ -68,6 +71,39 @@ public class DAOPersonaTest {
             Usuario result3 = DAOPersona.registrarse(newUser3);
             assertEquals("New user should be registered", newUser3, result3);
         }
+        
+        @Test
+        public void testBanearUsuario() {
+            // Mock data
+            DAOPersona.usuarioBD.clear(); // Clearing existing data
+            DAOPersona.usuarioBD.add(new Usuario(1, "John", "password1", false));
+
+            // Test case 1: Ban a user who is not banned
+            boolean result1 = DAOPersona.switchDeBaneoUsuario(1);
+            assertTrue("User should be banned", result1);
+
+            // Test case 2: Unban a user who is already banned
+            boolean result2 = DAOPersona.switchDeBaneoUsuario(1);
+            assertFalse("User should be unbanned now", result2);
+        }
+        
+        @Test
+        public void testEliminarUsuario() {
+            // Mock data
+            DAOPersona.usuarioBD.clear(); // Clearing existing data
+            DAOPersona.usuarioBD.add(new Usuario(1, "John", "password1", false));
+
+            // Test case 1: Delete an existing user
+            boolean result1 = DAOPersona.eliminarUsuario(1);
+            assertTrue("User should be deleted", result1);
+            assertNull("User should not exist after deletion", DAOPersona.usuarioBD.get(1));
+
+            // Test case 2: Try to delete a non-existing user
+            boolean result2 = DAOPersona.eliminarUsuario(2);
+            assertFalse("Deleting non-existing user should return false", result2);
+        }
+
+
 
 
 }

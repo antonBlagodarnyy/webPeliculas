@@ -4,7 +4,6 @@ package dao;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
-import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
@@ -150,7 +149,7 @@ public static Usuario registrarse(Usuario usuario) {
  * @param usuario
  * @return estado del boolean baneado
  */
-public static boolean banearUsuario(int idUsuario) {
+public static boolean switchDeBaneoUsuario(int idUsuario) {
 	Usuario usuarioAux =DAOPersona.getUsuario(idUsuario);
 	if(usuarioAux.isBaneado())
 		usuarioAux.setBaneado(false);
@@ -168,7 +167,7 @@ public static boolean banearUsuario(int idUsuario) {
  */
 public static boolean eliminarUsuario(int idUsuario) {
 	boolean eliminado=false;
-	Usuario usuarioAux = usuarioBD.get(idUsuario);
+	Usuario usuarioAux = DAOPersona.getUsuario(idUsuario);
 	if(usuarioAux!=null) {
 		usuarioAux=null;
 		eliminado=true;
