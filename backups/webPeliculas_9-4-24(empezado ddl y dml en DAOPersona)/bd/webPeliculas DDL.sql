@@ -1,0 +1,27 @@
+DROP TABLE PERSONA;
+DROP TABLE USUARIO CASCADE CONSTRAINTS;
+DROP TABLE ADMINISTRADOR;
+
+CREATE TABLE PERSONA(
+id_persona NUMBER PRIMARY KEY,
+nombre VARCHAR(100),
+contrasenia VARCHAR(100));
+
+CREATE TABLE USUARIO (
+    id_usuario NUMBER PRIMARY KEY,
+    baneado NUMBER(1,0),
+    ide_fk NUMBER,
+    FOREIGN KEY (ide_fk) REFERENCES PERSONA (id_persona)
+);
+
+CREATE TABLE ADMINISTRADOR(
+    id_admin NUMBER PRIMARY KEY,
+    id_persona NUMBER,
+    FOREIGN KEY (id_persona) REFERENCES PERSONA (id_persona)
+);
+
+
+
+//INSERT INTO empleados (dni, nombre, salario) VALUES (1, 'abcd', 9872);
+
+//SELECT DNI, NOMBRE, SALARIO FROM Empleados;
