@@ -7,14 +7,12 @@ import java.util.ArrayList;
 public class Administrador extends Persona {
 	//Att
 	private int idAdmin;//Att unico, no modificable e incremental
-	private static int contadorIdAdmin=0;
 	
 	//Meth
 		//Const
-	public Administrador(String nombre, String contrasenia) {
+	public Administrador(int idUsuario, String nombre, String contrasenia) {
 		super(nombre, contrasenia);
-		this.idAdmin=contadorIdAdmin;
-		contadorIdAdmin++;
+		this.idAdmin=idUsuario;
 	}
 	public Administrador() {
 		super();

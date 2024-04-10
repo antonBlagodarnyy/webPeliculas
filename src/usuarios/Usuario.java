@@ -42,5 +42,10 @@ public class Usuario extends Persona{
 		public int getIdUsuario() {
 		return idUsuario;
 	}
+		@Override
+		public String toString() {
+			String output =super.toString();
+			return output+=" +idUsuario: "+idUsuario;
+		}
 		
 }
