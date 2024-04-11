@@ -5,7 +5,6 @@ import audiovisual.Audiovisual;
 public class Usuario extends Persona{
 	//Att
 	private int idUsuario;
-	private static int contadorIdUsuario=0;
 	private boolean baneado;
 	
 	//Meth

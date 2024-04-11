@@ -10,9 +10,9 @@ public class Administrador extends Persona {
 	
 	//Meth
 		//Const
-	public Administrador(int idUsuario, String nombre, String contrasenia) {
+	public Administrador(int idAdmin, String nombre, String contrasenia) {
 		super(nombre, contrasenia);
-		this.idAdmin=idUsuario;
+		this.idAdmin=idAdmin;
 	}
 	public Administrador() {
 		super();
