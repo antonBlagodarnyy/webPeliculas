@@ -4,13 +4,13 @@ package dao;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
-import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.LinkedList;
+import java.util.List;
 
 import usuarios.Persona;
 import usuarios.Administrador;
@@ -30,16 +30,20 @@ public class DAOPersona {
 	static String usuario = "SYSTEM"; // Usuario de la base de datos
 	static String contraseña = "Admin2023"; // Contraseña de la base de datos
 
-	public static ArrayList<Usuario> usuarioBD= getListaUsuarios();
-	public static ArrayList<Administrador> adminBD= new ArrayList<>();
+
+	public static ArrayList[] listaPersonas = getListaPersonas();
+	public static ArrayList<Usuario> usuarioBD = listaPersonas[0];
+	public static ArrayList<Administrador> adminBD= listaPersonas[1];
 
 	/**
-	 * Conecta a la bd para obtener la lista de usuarios
+	 * Conecta a la bd para obtener la lista de personas que contiene
 	 * @return Lista de usuarios actualizada
 	 */
-	public static ArrayList<Usuario> getListaUsuarios(){
-		ArrayList<Usuario> listaAux= new ArrayList<Usuario>();
-
+	public static ArrayList [] getListaPersonas(){
+		ArrayList [] listaPersonas = new ArrayList [2];
+		ArrayList<Usuario> listaUsuarios= new ArrayList<Usuario>();
+		ArrayList<Administrador> listaAdmin= new ArrayList<Administrador>();
+		
 		try (Connection conn = DriverManager.getConnection(url, usuario, contraseña);
 				Statement stmt = conn.createStatement()) {
 			// Declaración de la sentencia SQL
@@ -58,20 +62,25 @@ public class DAOPersona {
 					ban=true;
 				else
 					ban=false;
-
-				if(tipo.equals(BOOLEAN_USER)) {
+				
+				if(tipo.equals(BOOLEAN_USER)) {//Crea el tipo de persona correcto
 					Usuario usuarioAux = new Usuario(idUsuario,nombre,contrasenia,ban);
-					listaAux.add(usuarioAux);
-				}
+					listaUsuarios.add(usuarioAux);
+				} else {
+					Administrador adminAux = new Administrador(idUsuario,nombre,contrasenia);
+					listaAdmin.add(adminAux);
 			}
-			
+			}
 		} catch (SQLException e) {
 			System.out.println("Error en getListaUsuarios");
 		}
-		return listaAux;
+		
+		listaPersonas[0]=listaUsuarios;
+		listaPersonas[1]=listaAdmin;
+		return listaPersonas;
+		
 	}
-
-
+	
 	/**
 	 * Metodo utilizado para obtener un objeto Usuario de la base de datos, a partir de su
 	 * idUsuario.
@@ -82,7 +91,7 @@ public class DAOPersona {
 	public static Usuario getUsuario(int idUsuario) {
 		Usuario usuarioBuscado=null;
 		for(int i=0;i<usuarioBD.size() && usuarioBuscado==null;i++) {
-			Usuario user=(Usuario) usuarioBD.get(idUsuario);
+			Usuario user=(Usuario) usuarioBD.get(i);
 			if(user.getIdUsuario()==(idUsuario))
 				usuarioBuscado=user;
 		}
@@ -100,8 +109,8 @@ public class DAOPersona {
  */
 public static Administrador getAdmin(int idAdmin) {
 	Administrador adminBuscado=null;
-	for(int i=0;i<usuarioBD.size() && adminBuscado==null;i++) {
-		Administrador user=(Administrador) adminBD.get(idAdmin);
+	for(int i=0;i<adminBD.size() && adminBuscado==null;i++) {
+		Administrador user=(Administrador) adminBD.get(i);
 		if(user.getIdAdmin()==(idAdmin))
 			adminBuscado=user;
 	}
@@ -125,12 +134,13 @@ public static Usuario registrarse(Usuario usuario) {
 			if(contrasenia.equals(usuarioAux.getContrasenia()) ||
 					nombre.equals(usuarioAux.getNombre())) {
 				repe=true;
-
+				usuario=null;
 			}
 		}
+	}
 		if(!repe)
 			usuarioBD.add(usuario);
-	}
+	
 
 	return usuario;
 }
@@ -140,7 +150,7 @@ public static Usuario registrarse(Usuario usuario) {
  * @param usuario
  * @return estado del boolean baneado
  */
-public static boolean banearUsuario(int idUsuario) {
+public static boolean switchDeBaneoUsuario(int idUsuario) {
 	Usuario usuarioAux =DAOPersona.getUsuario(idUsuario);
 	if(usuarioAux.isBaneado())
 		usuarioAux.setBaneado(false);
@@ -158,7 +168,7 @@ public static boolean banearUsuario(int idUsuario) {
  */
 public static boolean eliminarUsuario(int idUsuario) {
 	boolean eliminado=false;
-	Usuario usuarioAux = usuarioBD.get(idUsuario);
+	Usuario usuarioAux = DAOPersona.getUsuario(idUsuario);
 	if(usuarioAux!=null) {
 		usuarioAux=null;
 		eliminado=true;

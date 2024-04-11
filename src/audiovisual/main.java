@@ -9,6 +9,7 @@ import dao.DAOPersona;
 import enums.Genero;
 import trabajadores.Actor;
 import trabajadores.Director;
+import usuarios.Administrador;
 import usuarios.Usuario;
 public class main {
 
@@ -22,13 +23,29 @@ public class main {
 //		System.out.println(DAOPersona.registrarse(user2));
 //		System.out.println(DAOPersona.registrarse(user1));
 		
-		//Test2 (getListaUsuarios de la bd)
-		ArrayList<Usuario> getListaUsuariosTest = DAOPersona.getListaUsuarios();
-
-		for (Usuario usuario : getListaUsuariosTest) {
+		//Test2 comprobamos que sacamos los usuarios de la bd;
+		for (Usuario usuario : DAOPersona.usuarioBD) {
 			if(usuario!=null)
 			System.out.println(usuario);
 		}
+		saltoDeLinea();
+		
+		//Test3 Comprobamos que sacamos los admin
+		for (Administrador admin : DAOPersona.adminBD) {
+			if(admin!=null)
+			System.out.println(admin);
+		}
+		saltoDeLinea();
+		
+		//Test4 getUsuario
+		System.out.println(DAOPersona.getUsuario(3));//Coge usuario e
+		saltoDeLinea();
+		
+		//Test5 getAdmin
+		System.out.println(DAOPersona.getAdmin(4));
+	
 	}
-
+	private static void saltoDeLinea() {
+		System.out.println();
+	}
 }

@@ -6,7 +6,6 @@ import java.util.Objects;
 import audiovisual.Audiovisual;
 
 public abstract class Persona {
-	//TODO Implementar ToString y equals en metodos?
 	//Atributos
 	private String nombre;
 	private String contrasenia;

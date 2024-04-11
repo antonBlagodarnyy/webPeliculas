@@ -5,7 +5,6 @@ import audiovisual.Audiovisual;
 public class Usuario extends Persona{
 	//Att
 	private int idUsuario;
-	private static int contadorIdUsuario=0;
 	private boolean baneado;
 	
 	//Meth
@@ -42,5 +41,10 @@ public class Usuario extends Persona{
 		public int getIdUsuario() {
 		return idUsuario;
 	}
+		@Override
+		public String toString() {
+			String output =super.toString();
+			return output+=" +idUsuario: "+idUsuario;
+		}
 		
 }
