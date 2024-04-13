@@ -1,4 +1,4 @@
-package audiovisual;
+package backEnd.audiovisual;
 
 import java.time.LocalDate;
 import java.util.ArrayList;

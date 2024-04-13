@@ -1,4 +1,4 @@
-package audiovisual;
+package backEnd.audiovisual;
 
 import java.time.LocalTime;
 

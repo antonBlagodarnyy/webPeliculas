@@ -14,6 +14,8 @@ CREATE TABLE PERSONA (
 INSERT INTO persona (id_persona, nombre, contrasenia,tipo,baneado) VALUES (1, 'pepe', '1234','U',0);
 INSERT INTO persona (id_persona, nombre, contrasenia,tipo,baneado) VALUES (2, 'manolo', '2345','U',1);
 INSERT INTO persona (id_persona, nombre, contrasenia,tipo,baneado) VALUES (3, 'jose', '7892','U',0);
+INSERT INTO persona (id_persona, nombre, contrasenia,tipo,baneado) VALUES (4, 'julio', 'password1','U',0);
+
 
 INSERT INTO persona (id_persona, nombre, contrasenia,tipo,baneado) VALUES (4, 'Admin1', '7892','A',0);
 

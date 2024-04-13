@@ -1,4 +1,4 @@
-package dao;
+package backEnd.dao;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -10,14 +10,12 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.ArrayList;
 
-import audiovisual.Audiovisual;
-import audiovisual.Pelicula;
-import audiovisual.Serie;
-import enums.Genero;
-import trabajadores.Actor;
-import trabajadores.Director;
-import usuarios.Administrador;
-import usuarios.Usuario;
+import backEnd.audiovisual.Audiovisual;
+import backEnd.audiovisual.Pelicula;
+import backEnd.audiovisual.Serie;
+import backEnd.enums.Genero;
+import backEnd.usuarios.Administrador;
+import backEnd.usuarios.Usuario;
 
 
 
@@ -210,15 +208,15 @@ public class DAOAudiovisual {
 	 * @param director
 	 * @return peliculasDelDirector
 	 */
-	public static ArrayList<Audiovisual> filtrarPorDirector(Director director) {
-		ArrayList<Audiovisual> peliculasDelDirector=new ArrayList<Audiovisual>();
-		for (Audiovisual audiovisual : daoAudiovisual) {
-			if(audiovisual.getDirector().equals(director)) {
-				peliculasDelDirector.add(audiovisual);
-			}
-		}
-		return peliculasDelDirector;
-	}
+//	public static ArrayList<Audiovisual> filtrarPorDirector(Director director) {
+//		ArrayList<Audiovisual> peliculasDelDirector=new ArrayList<Audiovisual>();
+//		for (Audiovisual audiovisual : daoAudiovisual) {
+//			if(audiovisual.getDirector().equals(director)) {
+//				peliculasDelDirector.add(audiovisual);
+//			}
+//		}
+//		return peliculasDelDirector;
+//	}
 
 	/**
 	 * En este metodo obtenemos una lista con las peliculas en las que ha participado
@@ -226,15 +224,15 @@ public class DAOAudiovisual {
 	 * @param actor
 	 * @return peliculasDelActor
 	 */
-	public static ArrayList<Audiovisual> filtrarPorActor(Actor actor) {
-		ArrayList<Audiovisual> peliculasDelActor=new ArrayList<Audiovisual>();
-		for (Audiovisual audiovisual : daoAudiovisual) {
-			if(audiovisual.getDirector().equals(actor)) {
-				peliculasDelActor.add(audiovisual);
-			}
-		}
-		return peliculasDelActor;
-	}
+//	public static ArrayList<Audiovisual> filtrarPorActor(Actor actor) {
+//		ArrayList<Audiovisual> peliculasDelActor=new ArrayList<Audiovisual>();
+//		for (Audiovisual audiovisual : daoAudiovisual) {
+//			if(audiovisual.getDirector().equals(actor)) {
+//				peliculasDelActor.add(audiovisual);
+//			}
+//		}
+//		return peliculasDelActor;
+//	}
 
 
 

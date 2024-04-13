@@ -1,4 +1,4 @@
-package audiovisual;
+package backEnd.audiovisual;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -8,10 +8,7 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.ArrayList;
 
-import enums.Genero;
-import trabajadores.Actor;
-import trabajadores.Director;
-
+import backEnd.enums.Genero;
 
 
 public abstract class Audiovisual {
@@ -23,12 +20,12 @@ public abstract class Audiovisual {
 	private ArrayList<Double> valoraciones;
     private LocalDate fecha;
     private LocalTime duracion;
-    private Director director;
-    private ArrayList<Actor> actores= new ArrayList<Actor>();
+    private String director;
+    private ArrayList<String> actores= new ArrayList<String>();
     private static int numeroDeContenidos=1;
     private static boolean tablaCreada=false;
     
-	public Audiovisual(String titulo, Genero genero, ArrayList<Double> valoraciones, LocalDate fecha, LocalTime duracion,Director director,ArrayList<Actor> actores) {
+	public Audiovisual(String titulo, Genero genero, ArrayList<Double> valoraciones, LocalDate fecha, LocalTime duracion,String director,ArrayList<String> actores) {
 		super();
 		this.id =  numeroDeContenidos;
 		this.titulo = titulo;
@@ -79,16 +76,16 @@ public abstract class Audiovisual {
 	
 	//Att derivado
 	
-	public Director getDirector() {
+	public String getDirector() {
 		return director;
 	}
-	public void setDirector(Director director) {
+	public void setDirector(String director) {
 		this.director = director;
 	}
-	public ArrayList<Actor> getActores() {
+	public ArrayList<String> getActores() {
 		return actores;
 	}
-	public void setActores(ArrayList<Actor> actores) {
+	public void setActores(ArrayList<String> actores) {
 		this.actores = actores;
 	}
 	public double getMediaValoraciones() {
@@ -126,14 +123,7 @@ public abstract class Audiovisual {
         	// Manejo de excepciones
         	System.out.println("Error al ejecutar la sentencia: " + e.getMessage());
     	}
-
+    	}
     	
 	}
-   public String nombreActores() {
-	String nombre="";
-	   for (Actor actor : actores) {
-		nombre+=actor.getNombre()+"";
-	}
-	   return nombre;
-}
-}
+
