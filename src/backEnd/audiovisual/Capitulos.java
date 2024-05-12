@@ -3,8 +3,8 @@ package backEnd.audiovisual;
 import java.time.LocalTime;
 
 public class Capitulos {
-    private String tituloCapitulo;
-    private LocalTime duracionCapitulo;
+	private String tituloCapitulo;
+	private LocalTime duracionCapitulo;
 	public Capitulos(String tituloCapitulo, LocalTime duracionCapitulo) {
 		super();
 		this.tituloCapitulo = tituloCapitulo;
@@ -22,5 +22,5 @@ public class Capitulos {
 	public void setDuracionCapitulo(LocalTime duracionCapitulo) {
 		this.duracionCapitulo = duracionCapitulo;
 	}
-    
+
 }

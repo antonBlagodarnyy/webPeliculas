@@ -1,11 +1,13 @@
 package backEnd.dao;
 
-import java.sql.Connection;
+import java.sql.Connection; 
+import java.sql.Date;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.sql.Time;
 import java.time.LocalDate; 
 import java.time.LocalTime;
 import java.util.ArrayList;
@@ -13,228 +15,308 @@ import java.util.ArrayList;
 import backEnd.audiovisual.Audiovisual;
 import backEnd.audiovisual.Pelicula;
 import backEnd.audiovisual.Serie;
-import backEnd.enums.Genero;
-import backEnd.usuarios.Administrador;
-import backEnd.usuarios.Usuario;
-
-
+import backEnd.audiovisual.Temporada;
+import backEnd.utilidad.Utilidad;
+import frontEnd.Texto;
 
 public class DAOAudiovisual {
-	private static ArrayList<Audiovisual> daoAudiovisual=new ArrayList();
+	public static String selectAudiovisualTitulo(int id) {
 
+		String resultado = null;
+
+		//Realizo la conexion y el select del ID de la tabla
+
+		try (Connection conn = DriverManager.getConnection(Texto.ENLACE_BD, Texto.USUARIO, Texto.CONTRASENA);		
+
+				Statement stmt = conn.createStatement()) {
+
+			String sql = "SELECT titulo FROM ContenidoAudiovisual WHERE idAudiovisual='" + id+ "'";
+
+
+
+			// Ejecuto el Select
+
+			ResultSet rs = stmt.executeQuery(sql);
+
+
+
+			// Recojo el ID del titulo introducido
+
+			if (rs.next()) {
+
+				resultado = rs.getString("Titulo");
+
+			}
+
+		} catch (SQLException e) {
+
+			//Si salta excepcion simplemente no pasa nada
+
+		}
+
+		/*Devuelvo el resultado, si no ha encontrado nada devuelve 
+
+		el -1 por lo cual luego no hara nada*/
+
+		return resultado; 
+
+
+
+	}
 	/**
-	 * Constructor del objeto utilizado para acceder a los datos de la base de datos.
+	 * Reaiza un select de un genero determinado
+	 * @author Antonio Jesus Blanco
+	 * @param genero
+	 * @return resultado
 	 */
-	public DAOAudiovisual() {
+	public static String selectAudiovisualGenero(String genero) {
+		String resultado="";
+		//Realizo la conexion y el select de la tabla
+		try (Connection conn = DriverManager.getConnection(Texto.ENLACE_BD, Texto.USUARIO, Texto.CONTRASENA);
+				PreparedStatement pstmt = conn.prepareStatement(Texto.SENTENCIA_SELECT_GENERO)) {
+			pstmt.setString(1, genero);
+
+			// Ejecuto el Select
+			ResultSet rs = pstmt.executeQuery();
+
+			// Recojo los valores en un String
+			while (rs.next()) {
+				String tituloDevuelto = rs.getString("titulo");
+				String generoDevuelto = rs.getString("genero"); // TODO Hacer el switch
+				double valoracionMedia=rs.getDouble("ValoracionMedia");
+				LocalDate fechaEstreno = rs.getDate("fecha").toLocalDate();
+
+				resultado+="\nTitulo: "+tituloDevuelto+", \nGenero: "+genero+", \n"+"Valoracion media: "+valoracionMedia+"\n"+"Fecha de estreno: "+fechaEstreno+"\n";
+			}
+
+		} catch (SQLException e) {
+			// Si da fallo informa del fallo
+			resultado=Texto.SENTENCIA_ERROR+ e.getMessage();
+		}
+		return resultado;
+
 	}
 
-	public static void añadirAudioVisual(Audiovisual audiovisualIntroducido) {
-		daoAudiovisual.add(audiovisualIntroducido);
+	/**
+	 * Realiza un select que da un id, el cual es buscado por el titulo
+	 * @author Antonio Jesus Blanco
+	 * @param titulo
+	 * @return resultado
+	 */
+	public static int selectAudiovisualId(String titulo) {
+		int resultado = -1;
+		//Realizo la conexion y el select del ID de la tabla
+		try (Connection conn = DriverManager.getConnection(Texto.ENLACE_BD, Texto.USUARIO, Texto.CONTRASENA);		
+				Statement stmt = conn.createStatement()) {
+			String sql = Texto.SENTENCIA_SELECT_ID + titulo + "'";
+
+			// Ejecuto el Select
+			ResultSet rs = stmt.executeQuery(sql);
+
+			// Recojo el ID del titulo introducido
+			if (rs.next()) {
+				resultado = rs.getInt("IDAudiovisual");
+			}
+		} catch (SQLException e) {
+			//Si salta excepcion simplemente no pasa nada
+		}
+		/*Devuelvo el resultado, si no ha encontrado nada devuelve 
+		el -1 por lo cual luego no hara nada*/
+		return resultado; 
+
 	}
 	/**
-	 * Introducimos el ID de una pelicula
+	 * Realiza un select general de toda la tabla ContenidoAudiovisual
+	 * @author Antonio Jesus Blanco
+	 * @return resultado
+	 */
+	public static String selectAudiovisual() {
+		int minutosDuracion=0;
+		int horasDuracion=0;
+
+		String resultado = "";
+		//Realizo la conexion y el select del ID de la tabla
+		try (Connection conn = DriverManager.getConnection(Texto.ENLACE_BD, Texto.USUARIO, Texto.CONTRASENA);
+				Statement stmt = conn.createStatement()) {
+			String sql =Texto.SENTENCIA_SELECT;
+
+			// Ejecuto el Select 
+			ResultSet rs = stmt.executeQuery(sql);
+
+			// Recojo el resultado en un String 
+			while (rs.next()) {
+				String titulo=rs.getString("Titulo");
+				int duracion=rs.getInt("Duracion");
+				String genero=rs.getString("Genero");
+				double valoracion=rs.getDouble("ValoracionMedia");
+				LocalDate fechaEstreno = rs.getDate("fecha").toLocalDate();
+
+				//Realizo un bucle para recoger la duracion en horas y minutos
+				while (duracion>=60) {
+					duracion-=60;
+					horasDuracion++;
+				}
+				minutosDuracion=duracion;
+				resultado+="\nTitulo: "+titulo+", \nGenero: "+genero+", \nDuracion: "+horasDuracion+":"+minutosDuracion+",\n"+"Valoracion media: "+valoracion+"\n"+"Fecha de estreno: "+fechaEstreno+"\n";
+			}
+
+		} catch (SQLException e) {
+			resultado=Texto.SENTENCIA_ERROR+ e.getMessage();
+		}
+
+		return resultado; 
+
+	}
+	/**
+	
+ * Realiza un insert a la tabla ya sea de una pelicula o una serie
+	 * @author Antonio Jesus Blanco
+	 * @param audiovisual
+	 * @return mensaje
+	 */
+	public static String insertAudiovisual(Audiovisual audiovisual) {
+		String mensaje="";
+		String genero = null;
+		//Cambio el genero de audiovisual a un String para introducirlo en la tabla
+		genero=Utilidad.generoCambiarDeGeneroAString(audiovisual.getGenero());
+
+		//Realizo un bucle para tener todos los nombres de los actores en un String
+		String nombreActores="";
+		for (String actor : audiovisual.getActores()) {
+			nombreActores+=actor+"\n";
+		}
+		int minutosAudiovisual=audiovisual.getDuracion().getHour()*60+audiovisual.getDuracion().getMinute();
+
+		//Realizo la conexion y el insert en la tabla
+		try (Connection conn = DriverManager.getConnection(Texto.ENLACE_BD, Texto.USUARIO, Texto.CONTRASENA)) {
+			String sql = Texto.SENTENCIA_INSERT;;
+			PreparedStatement pstmt = conn.prepareStatement(sql);
+
+			// Establezco los parámetros que introducire en la consulta
+			pstmt.setString (1, audiovisual.getTitulo());
+			pstmt.setString (2, genero); 
+			pstmt.setDouble (3, audiovisual.getMediaValoraciones()); 
+			pstmt.setDate (4, Date.valueOf(audiovisual.getFecha()));
+			pstmt.setInt (5, minutosAudiovisual);
+			pstmt.setString (6, audiovisual.getDirector()); 
+			pstmt.setString (7, nombreActores); 
+
+			// Si es una pelicula el valor de numero de temporadas y numero capitulos es 0
+			if (audiovisual instanceof Pelicula) {
+				pstmt.setInt (8, 0); 
+				pstmt.setInt (9, 0);  
+			}else {
+				//Si es una serie le añado el numero de temporadas y capitulos que tenga
+				pstmt.setInt (8, ((Serie) audiovisual).getNumeroDeTemporadas()); 
+				pstmt.setInt (9, ((Serie) audiovisual).getCapitulosTotales());  
+			}
+			// Ejecuto el Insert
+			pstmt.executeUpdate();
+			mensaje=Texto.SENTENCIA_CREADA;     
+		} catch (SQLException e) {
+			// Si da fallo informa del fallo
+			mensaje=Texto.SENTENCIA_ERROR + e.getMessage();
+		}
+		return mensaje;
+	}
+
+	/**
+	 * Realiza un update de la valoracion de un determinado id
+	 * @author Antonio Jesus Blanco
+	 * @param id
+	 * @param valoracionIntroducida
+	 * @return
+	 */
+	public static String updateAudiovisual(int id, double valoracionIntroducida) {
+		String mensaje="";
+		//Realizo la conexion y el Update de la tabla
+		try (Connection conn = DriverManager.getConnection(Texto.ENLACE_BD, Texto.USUARIO, Texto.CONTRASENA)) {
+			String sql = Texto.SENTENCIA_UPDATE;
+			PreparedStatement pstmt = conn.prepareStatement(sql);
+
+			// Establezco la valoracion que metere y el ID al que le quiero cambiar la valoracion
+			pstmt.setDouble (1, valoracionIntroducida);
+			pstmt.setInt (2, id); //TODO
+
+			// Ejecuto el Update
+			pstmt.executeUpdate();
+			mensaje=Texto.SENTENCIA_CREADA;   
+		} 
+
+		catch (SQLException e) {
+			// Si da fallo informa del fallo
+			mensaje=Texto.SENTENCIA_ERROR + e.getMessage();
+
+		}
+		return mensaje;
+	}
+
+	/**
+	 * Realiza un delete de un determinado ID
+	 * @author Antonio Jesus Blanco
 	 * @param id
 	 * @return
 	 */
-	public static Audiovisual getAudiovisual(int id) {
-		Audiovisual contenidoAudiovisual=null;
-		for (Audiovisual audiovisual : daoAudiovisual) {
-			if(audiovisual.getId()==id) {
-				contenidoAudiovisual=audiovisual;
-				daoAudiovisual.get(id);
-			}
-		}	
-		return contenidoAudiovisual;	
-	}
-	/**
-	 * En este metodo obtenemos una lista con todas las peliculas del catalogo
-	 * @return peliculasDelCatalogo
-	 */
-	public static ArrayList<Pelicula> filtrarPelicula() {
-		ArrayList<Pelicula>peliculasDelCatalogo=new ArrayList<>();
-		for (Audiovisual audiovisual : daoAudiovisual) {
-			if (audiovisual instanceof Pelicula) {
-				Pelicula pelicula = (Pelicula) audiovisual;
-				peliculasDelCatalogo.add(pelicula);
-			}
-		}
-		return peliculasDelCatalogo;
-	}
-	/**
-	 * En este metodo obtenemos la lista de series que tenemos en nuestro catalogo
-	 * @return seriesDelCatalogo
-	 */
-	public static ArrayList<Serie> filtrarSerie() {
-		ArrayList<Serie>seriesDelCatalogo=new ArrayList<>();
-		for (Audiovisual audiovisual : daoAudiovisual) {
-			if (audiovisual instanceof Serie) {
-				Serie serie = (Serie) audiovisual;
-				seriesDelCatalogo.add(serie);
-			}
-		}
-		return seriesDelCatalogo;
-	}
-	public static ArrayList<Audiovisual> filtrarValoracion(double valoracionMinima,double valoracionMaxima) {
-		ArrayList<Audiovisual> audiovisualFiltrado=new ArrayList(); 
-		for (Audiovisual audiovisual : daoAudiovisual) {
-			if(audiovisual.getMediaValoraciones()<=valoracionMaxima&&audiovisual.getMediaValoraciones()>=valoracionMinima) {
-				audiovisualFiltrado.add(audiovisual);
-			}
-		}
-		return audiovisualFiltrado;
-	}
-	public static void filtrarValoracionSerie(double valoracionMinima,double valoracionMaxima) {
-		ArrayList<Serie> series=filtrarSerie();
-		ArrayList<Serie> seriesFiltradas=new ArrayList();
-		for (Serie serie : series) {
-			if(serie.getMediaValoraciones()<=valoracionMaxima&&serie.getMediaValoraciones()>=valoracionMinima) {
-				seriesFiltradas.add(serie);
-			}
-		}
-	}
-	public static void filtrarValoracionPelicula(double valoracionMinima,double valoracionMaxima) {
-		ArrayList<Pelicula> peliculas=filtrarPelicula();
-		ArrayList<Pelicula> peliculasFiltradas=new ArrayList();
-		for (Pelicula pelicula : peliculasFiltradas) {
-			if(pelicula.getMediaValoraciones()<=valoracionMaxima&&pelicula.getMediaValoraciones()>=valoracionMinima) {
-				peliculasFiltradas.add(pelicula);
-			}
-		}
-	}
+	public static String deleteAudiovisual(int id) {
+		String mensaje="";
+		//Realizo la conexion y el Delete de un determinado ID
+		try (Connection conn = DriverManager.getConnection(Texto.ENLACE_BD, Texto.USUARIO, Texto.CONTRASENA);			
+				Statement stmt = conn.createStatement()) {
+			String sql = Texto.SENTENCIA_DELETE + id;
 
-	/**
-	 * En este metodo obtenemos una lista con todo el contenido del genero que hemos introducido
-	 * @param genero
-	 * @return audiovisualFiltrado
-	 */
-	public static ArrayList<Audiovisual> filtrarGenero(Genero genero) {
-		ArrayList<Audiovisual> audiovisualFiltrado=new ArrayList(); 
-		for (Audiovisual audiovisual : daoAudiovisual) {
-			if(audiovisual.getGenero().equals(genero)) {
-				audiovisualFiltrado.add(audiovisual);
-			}
-		}
-		return audiovisualFiltrado;
+			//Ejecuto el Delete
+			stmt.executeUpdate(sql);
+			mensaje=Texto.SENTENCIA_CREADA;  
+
+		} catch (SQLException e) {
+			// Si da fallo informa del fallo
+			mensaje=Texto.SENTENCIA_ERROR + e.getMessage();
+		}  
+		return mensaje;
 	}
 	/**
-	 * En este metodo obtenemos una lista con todas las series del genero que hemos introducido
-	 * @param genero
+	 * Borra la tabla contenidoAudiovisual
+	 * @author Antonio Jesus Blanco
 	 * @return
 	 */
-	public static ArrayList<Serie> filtrarGeneroSerie(Genero genero){
-		ArrayList<Serie> series=filtrarSerie();
-		ArrayList<Serie> seriesFiltradas=new ArrayList();
-		for (Serie serie : series) {
-			if(serie.getGenero().equals(genero)) {
-				seriesFiltradas.add(serie);
-			}
+	public static String borrarTablaAudiovisual() {
+		String mensaje="";
+		//Realizo la conexion y el delete table
+		String sql = Texto.SENTENCIA_BORRAR_TABLA;
+		try (Connection conn = DriverManager.getConnection(Texto.ENLACE_BD, Texto.USUARIO, Texto.CONTRASENA);
+				// Ejecuto el delete
+				PreparedStatement pstmt = conn.prepareStatement(sql)) {
+			pstmt.execute();
+			mensaje=Texto.SENTENCIA_CREADA; 
+
+		} catch (SQLException e) {
+			// Si da fallo informa del fallo
+			mensaje= Texto.SENTENCIA_ERROR+ e.getMessage(); 
 		}
-		return seriesFiltradas;
+		return mensaje;
 	}
 
 
 	/**
-	 * En este metodo obtenemos una lista con todas las peliculas que son del genero 
-	 * que hemos introducido
-	 */
-	public static ArrayList<Pelicula> filtrarGeneroPelicula(Genero genero){
-		ArrayList<Pelicula> peliculas=filtrarPelicula();
-		ArrayList<Pelicula> peliculasFiltradas=new ArrayList();
-		for (Pelicula pelicula : peliculas) {
-			if(pelicula.getGenero().equals(genero)) {
-				peliculasFiltradas.add(pelicula);
-			}
-		}
-		return peliculasFiltradas;
-	}
-
-
-	/**Aniade valoraciones en la bd.
-	 * 
-	 * @param audiovisual
-	 * @param valoracion
+	 * Crea la tabla contenidoAudiovisual
+	 * @author Antonio Jesus Blanco
 	 * @return
 	 */
-	public static Audiovisual dejarValoracion(int id ,double valoracion, Usuario usuario) {
-		//Tal y como eTODO Se podria hacer un arrayList con las valoraciones en audiovisual y filtrar por la media de esas valoraciones?sta solo se puede dejar una valoracion
-		Audiovisual audiovisualAux =getAudiovisual(id);
-		ArrayList<Double> valoracionAux = audiovisualAux.getValoracion();
-
-		if (valoracion < Audiovisual.VALORACION_MAXIMA && valoracion > Audiovisual.VALORACION_MINIMA) {
-			Double valoracionDouble=valoracion;
-			valoracionAux.add(valoracionDouble);
-			DAOPersona.aniadirValoracionAHistorial(valoracion,usuario);
+	public static String crearTablaAudiovisual() {
+		String mensaje="";
+		//Realizo la conexion y el create table
+		String sql = Texto.CREAR_TABLA;
+		try (Connection conn = DriverManager.getConnection(Texto.ENLACE_BD, Texto.USUARIO, Texto.CONTRASENA);
+				// Ejecuto el create
+				PreparedStatement pstmt = conn.prepareStatement(sql)) {
+			pstmt.execute();
+			mensaje=Texto.TABLA_CREADA;  
+		} catch (SQLException e) {
+			/// Si da fallo informa del fallo
+			mensaje=Texto.TABLA_ERROR + e.getMessage(); 
 		}
-		return audiovisualAux;
+		return mensaje;
 	}
-
-	/**Aniade un AV a favoritos
-	 *  
-	 * @param audiovisual
-	 * @return AV si se ha aniadido. Si no devuelve null
-	 */
-	public static Audiovisual aniadirAFavoritos(int idl, Usuario usuario) {
-		Audiovisual audiovisualAux =getAudiovisual(idl);
-		if(audiovisualAux!=null && usuario != null) {
-			ArrayList favoritosAux = usuario.getFavoritos();
-			favoritosAux.add(audiovisualAux);
-			usuario.setFavoritos(favoritosAux);
-		} else 
-			audiovisualAux=null;
-
-		return audiovisualAux;
-	}
-
-	/**Elimina un AV de favoritos
-	 *  
-	 * @param audiovisual
-	 * @return AV si se ha eliminado. Si no devuelve null
-	 */
-	public static Audiovisual eliminidaAVDeFavoritos(int idl, Usuario usuario) {
-		Audiovisual audiovisualAux =getAudiovisual(idl);
-		ArrayList favoritosAux = usuario.getFavoritos();
-		favoritosAux.add(audiovisualAux);
-
-		if(audiovisualAux!=null && usuario != null && favoritosAux.contains(audiovisualAux)) {
-			favoritosAux.remove(audiovisualAux);
-			usuario.setFavoritos(favoritosAux);
-		} else 
-			audiovisualAux=null;
-
-		return audiovisualAux;
-	}
-	/**
-	 * En este metodo obtenemos una lista con las peliculas que ha dirigido el director en cuestion.
-	 * @param director
-	 * @return peliculasDelDirector
-	 */
-//	public static ArrayList<Audiovisual> filtrarPorDirector(Director director) {
-//		ArrayList<Audiovisual> peliculasDelDirector=new ArrayList<Audiovisual>();
-//		for (Audiovisual audiovisual : daoAudiovisual) {
-//			if(audiovisual.getDirector().equals(director)) {
-//				peliculasDelDirector.add(audiovisual);
-//			}
-//		}
-//		return peliculasDelDirector;
-//	}
-
-	/**
-	 * En este metodo obtenemos una lista con las peliculas en las que ha participado
-	 * el actor en cuestion.
-	 * @param actor
-	 * @return peliculasDelActor
-	 */
-//	public static ArrayList<Audiovisual> filtrarPorActor(Actor actor) {
-//		ArrayList<Audiovisual> peliculasDelActor=new ArrayList<Audiovisual>();
-//		for (Audiovisual audiovisual : daoAudiovisual) {
-//			if(audiovisual.getDirector().equals(actor)) {
-//				peliculasDelActor.add(audiovisual);
-//			}
-//		}
-//		return peliculasDelActor;
-//	}
-
-
 
 }
 

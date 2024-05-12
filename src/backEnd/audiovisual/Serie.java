@@ -3,7 +3,7 @@
 
 package backEnd.audiovisual;
 
-import java.sql.Connection; 
+import java.sql.Connection;  
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
@@ -13,15 +13,26 @@ import java.time.LocalTime;
 import java.util.ArrayList;
 
 import backEnd.enums.Genero;
- 
+
+
+
 public class Serie extends Audiovisual {
-    private ArrayList<Temporada> temporadas=new ArrayList<>();
- 
+	private ArrayList<Temporada> temporadas=new ArrayList<>();
+
 	public Serie(String titulo, Genero genero, ArrayList<Double> valoraciones, LocalDate fecha, LocalTime duracion,String director,ArrayList<String> actores,
 			ArrayList<Temporada> temporadas) {
 		super(titulo, genero, valoraciones, fecha, duracion, director, actores);
 		this.temporadas = temporadas;
 	}
+	
+	
+	
+	/*
+	public Serie(String titulo, Genero genero, ArrayList<Double> valoraciones, LocalDate fecha, LocalTime duracion,String director,ArrayList<String> actores,
+			int numeroTemporadas, int numeroCapitulos) {
+		super(titulo, genero, valoraciones, fecha, duracion, director, actores);
+		this.temporadas = temporadas;
+	}*/
 	public ArrayList<Temporada> getTemporadas() {
 		return temporadas;
 	}
@@ -42,32 +53,32 @@ public class Serie extends Audiovisual {
 		}
 		return numeroCapitulos;
 	}
+/*
+	public void aniadirPeliculaBaseDatos() {
+		String url = "jdbc:oracle:thin:@localhost:1521:XE"; 
+		try (Connection conn = DriverManager.getConnection(url, "System", "Admin2023")) {		
+			String sql = "INSERT INTO ContenidoAudiovisual(Titulo, Genero, ValoracionMedia, Fecha, Duracion, Director, Actores, NumeroDeTemporadas, CapitulosTotales) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+			try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
 
-//	public void aniadirPeliculaBaseDatos() {
-//		String url = "jdbc:oracle:thin:@localhost:1521:XE"; 
-//		try (Connection conn = DriverManager.getConnection(url, "System", "Admin2023")) {		
-//			String sql = "INSERT INTO ContenidoAudiovisual(Titulo, Genero, ValoracionMedia, Fecha, Duracion, Director, Actores, NumeroDeTemporadas, CapitulosTotales) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
-//			try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
-//
-//				pstmt.setString(1, getTitulo());
-////				pstmt.setString(2, getGenero()); 
-//				pstmt.setDouble(3, getMediaValoraciones()); 
-////				pstmt.setDate(4, getFecha()); 
-////				pstmt.setTime(5, getDuracion()); 
-//				pstmt.setString(6, getDirector().getNombre()+""+getDirector().getApellido());
-//				pstmt.setString(7, nombreActores()); 
-//				pstmt.setInt(8, getNumeroDeTemporadas()); 
-//				pstmt.setInt(9, getCapitulosTotales()); 
-//
-//
-//				pstmt.executeUpdate();
-//				System.out.println("Sentencia ejecutada correctamente.");
-//			} 
-//		} catch (SQLException e) {
-//			System.out.println("Error al ejecutar la sentencia: " + e.getMessage());
-//		}
-//	}
+				pstmt.setString(1, getTitulo());
+				pstmt.setString(2, getGenero()); 
+				pstmt.setDouble(3, getMediaValoraciones()); 
+				pstmt.setDate(4,() getFecha()); 
+				pstmt.setTime(5, getDuracion()); 
+				pstmt.setString(6, getDirector().getNombre()+""+getDirector().getApellido());
+				pstmt.setString(7, nombreActores()); 
+				pstmt.setInt(8, getNumeroDeTemporadas()); 
+				pstmt.setInt(9, getCapitulosTotales()); 
 
-	
+
+				pstmt.executeUpdate();
+				System.out.println("Sentencia ejecutada correctamente.");
+			} 
+		} catch (SQLException e) {
+			System.out.println("Error al ejecutar la sentencia: " + e.getMessage());
+		}
+	}
+
+*/
 }
 

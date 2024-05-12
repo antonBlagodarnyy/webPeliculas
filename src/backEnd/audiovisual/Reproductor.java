@@ -7,8 +7,8 @@ import backEnd.enums.Idioma;
 
 
 public class Reproductor {
-    ArrayList<Idioma>idiomasDisponibles=new ArrayList<>();
-    ArrayList<Idioma>subtitulosDisponibles=new ArrayList<>();
+	ArrayList<Idioma>idiomasDisponibles=new ArrayList<>();
+	ArrayList<Idioma>subtitulosDisponibles=new ArrayList<>();
 	public Reproductor(ArrayList<Idioma> idiomasDisponibles, ArrayList<Idioma> subtitulosDisponibles) {
 		super();
 		this.idiomasDisponibles = idiomasDisponibles;
@@ -26,6 +26,6 @@ public class Reproductor {
 	public void setSubtitulosDisponibles(ArrayList<Idioma> subtitulosDisponibles) {
 		this.subtitulosDisponibles = subtitulosDisponibles;
 	}
-    
-    
+
+
 }

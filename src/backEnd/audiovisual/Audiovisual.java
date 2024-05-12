@@ -1,6 +1,6 @@
 package backEnd.audiovisual;
 
-import java.sql.Connection;
+import java.sql.Connection;  
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -11,35 +11,33 @@ import java.util.ArrayList;
 import backEnd.enums.Genero;
 
 
+
+
 public abstract class Audiovisual {
 	public static final int VALORACION_MINIMA=0, VALORACION_MAXIMA=5;
-	
-	private int id;
-	private String titulo;
-	private Genero genero;
-	private ArrayList<Double> valoraciones;
-    private LocalDate fecha;
-    private LocalTime duracion;
-    private String director;
-    private ArrayList<String> actores= new ArrayList<String>();
-    private static int numeroDeContenidos=1;
-    private static boolean tablaCreada=false;
-    
-	public Audiovisual(String titulo, Genero genero, ArrayList<Double> valoraciones, LocalDate fecha, LocalTime duracion,String director,ArrayList<String> actores) {
-		super();
-		this.id =  numeroDeContenidos;
-		this.titulo = titulo;
-		this.genero = genero;
-		this.valoraciones = valoraciones;
-		this.fecha = fecha;
-		this.duracion = duracion;
-		this.director=director;
-		this.actores=actores;
-		numeroDeContenidos++;
-		if(!tablaCreada) {
-			crearTabla();
-		}
-	}
+	    private static int numeroDeContenidos = 1;
+	    
+	   // private int id;
+	    private String titulo;
+	    private Genero genero;
+	    private ArrayList<Double> valoraciones;
+	    private LocalDate fecha;
+	    private LocalTime duracion;
+	    private String director;
+	    private ArrayList<String> actores;
+	   
+
+	    public Audiovisual(String titulo, Genero genero, ArrayList<Double> valoraciones, LocalDate fecha, LocalTime duracion, String director, ArrayList<String> actores) {
+	        // this.id = numeroDeContenidos;
+	        this.titulo = titulo;
+	        this.genero = genero;
+	        this.valoraciones = valoraciones;
+	        this.fecha = fecha;
+	        this.duracion = duracion;
+	        this.director = director;
+	        this.actores = actores;
+	       
+	    }
 	public String getTitulo() {
 		return titulo;
 	}
@@ -70,12 +68,17 @@ public abstract class Audiovisual {
 	public void setDuracion(LocalTime duracion) {
 		this.duracion = duracion;
 	}
-	public int getId() {
-		return id;
+	
+	public double getMediaValoraciones() {
+		double media=0;
+		int sumatorio=0;
+		for (Double double1 : valoraciones) {
+			sumatorio+=double1;
+
+		}
+		media=sumatorio/valoraciones.size();
+		return media;
 	}
-	
-	//Att derivado
-	
 	public String getDirector() {
 		return director;
 	}
@@ -88,42 +91,9 @@ public abstract class Audiovisual {
 	public void setActores(ArrayList<String> actores) {
 		this.actores = actores;
 	}
-	public double getMediaValoraciones() {
-		double media=0;
-		int sumatorio=0;
-		for (Double double1 : valoraciones) {
-			sumatorio+=double1;
-			
-		}
-		media=sumatorio/valoraciones.size();
-		return media;
-	}
-    private void crearTabla() {
-    	// Configuración de la conexión a la base de datos Oracle XE
-    	String url = "jdbc:oracle:thin:@localhost:1521:XE"; // URL de conexión
-   	// Intenta establecer la conexión
-    	try (Connection conn = DriverManager.getConnection(url, "System", "Admin2023");
-   		 //Indicamos usuario y contraseña
-         	Statement stmt = conn.createStatement()) {
-   		  // Declaración de la sentencia SQL
-        	String sql = "CREATE TABLE ContenidoAudiovisual (ID integer by default on null as IDENTITY,"
-        			+ "Titulo,"
-        			+ "Genero,"
-        			+ "ValoracionMedia,"
-        			+ "Fecha,"
-        			+ "Duracion,"
-        			+ "Director,"
-        			+ "Actores,"
-        			+ "NumeroDeTemporadas,"
-        			+ "CapitulosTotales);";
-        	// Ejecutar la sentencia SQL
-        	stmt.execute(sql);
-        	System.out.println("Sentencia ejecutada correctamente.");
-    	} catch (SQLException e) {
-        	// Manejo de excepciones
-        	System.out.println("Error al ejecutar la sentencia: " + e.getMessage());
-    	}
-    	}
-    	
-	}
+	
 
+
+
+
+}
